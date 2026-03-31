@@ -867,7 +867,7 @@ class fieldData(UPPData):
         if not spec.get('accumulate', False):
             if 'fcst_hr' in vals.dims:
                 available_fcst_hrs = self.ds['fcst_hr'].values
-                if self.fhr not in available_fcst_hrs:
+                if not np.isin(self.fhr, available_fcst_hrs):
                     raise ValueError(
                         f"Forecast hour {self.fhr} is not available in the dataset. "
                         f"Available forecast hours: {available_fcst_hrs}"
