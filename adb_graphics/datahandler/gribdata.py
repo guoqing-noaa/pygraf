@@ -866,8 +866,13 @@ class fieldData(UPPData):
         # Select a single forecast hour (only if there are many)
         if not spec.get('accumulate', False):
             if 'fcst_hr' in vals.dims:
-                fcst_hr = 0 if self.ds.sizes['fcst_hr'] <= 1 else int(self.fhr)
-                vals = vals.sel(**{'fcst_hr': fcst_hr})
+                available_fcst_hrs = self.ds['fcst_hr'].values
+                if self.fhr not in available_fcst_hrs:
+                    raise ValueError(
+                        f"Forecast hour {self.fhr} is not available in the dataset. "
+                        f"Available forecast hours: {available_fcst_hrs}"
+                    )
+                vals = vals.sel(**{'fcst_hr': int(self.fhr)})
 
         transforms = spec.get('transform')
         if transforms and do_transform:
